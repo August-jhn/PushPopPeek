@@ -59,21 +59,55 @@ def click(game_array):
             dis = math.sqrt((x - m_x) ** 2 + (y - m_y) ** 2)
             if dis < WIDTH // ROWS // 2:
                 # remove previous piece
-                if piece == 'x':
-                    images.remove((x, y, X_IMAGE))
-                elif piece == 'o':
-                    images.remove((x, y, O_IMAGE))
                 
                 if x_turn:
-                    images.append((x, y, X_IMAGE))
                     x_turn = False
-                    game_array[i][j] = (x, y, 'x')
+                    if piece == 'x':
+                        x_turn = True
+                    else:
+                        if piece == 'o':
+                            images.remove((x, y, O_IMAGE))
+                        images.append((x, y, X_IMAGE))
+                        game_array[i][j] = (x, y, 'x')
 
                 else:
-                    images.append((x, y, O_IMAGE))
                     x_turn = True
-                    game_array[i][j] = (x, y, 'o')
-    images.append((x, y, X_IMAGE))
+                    if piece == 'o':
+                        x_turn = False
+                    else:
+                        if piece == 'x':
+                            images.remove((x, y, X_IMAGE))
+                        images.append((x, y, O_IMAGE))
+                        game_array[i][j] = (x, y, 'o')
+
+def check_win(game_array):
+    # check rows
+    for row in game_array:
+        pieces = set([piece for _,_,piece in row])
+        if len(pieces) == 1 and '' not in pieces:
+            print("win")
+
+    # check cols
+    for cols in range(len(game_array[0])):
+        pieces = set()
+        for row in game_array:
+            pieces.add(row[cols][2])
+        if len(pieces) == 1 and '' not in pieces:
+            print("win")
+
+    # check diagonals
+    diag1 = set()
+    diag2 = set()
+    for i, cols in enumerate(game_array[0]):
+        for j, row in enumerate(game_array):
+            if i == j:
+                diag1.add(game_array[i][j][2])
+            if i+j == len(game_array):
+                diag2.add(game_array[i][j][2])
+    if len(diag1) == 1 and '' not in diag1:
+            print("win")
+    if len(diag2) == 1 and '' not in diag2:
+            print("win")
 
 def render():
     win.fill(WHITE)
@@ -98,6 +132,7 @@ def main():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 click(game_array)
+                check_win(game_array)
         render()
 
 
