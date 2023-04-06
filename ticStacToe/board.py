@@ -15,20 +15,30 @@ GRAY = (125, 125, 125)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
-X_IMAGE = pygame.transform.scale(pygame.image.load("ticStacToe\X_image.png"), (100,100))
-O_IMAGE = pygame.transform.scale(pygame.image.load("ticStacToe\O_image.png"), (100,100))
-Both = pygame.transform.scale(pygame.image.load("ticStacToe\Both.png"), (200,50))
-Neutral = pygame.transform.scale(pygame.image.load("ticStacToe\\Neutral.png"), (200,50))
-Remove = pygame.transform.scale(pygame.image.load("ticStacToe\Remove.png"), (200,50))
+X_IMAGE = pygame.transform.scale(pygame.image.load("ticStacToe\X_image.png"), (WIDTH/5,WIDTH/5))
+O_IMAGE = pygame.transform.scale(pygame.image.load("ticStacToe\O_image.png"), (WIDTH/5,WIDTH/5))
+Both = pygame.transform.scale(pygame.image.load("ticStacToe\Both.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Neutral = pygame.transform.scale(pygame.image.load("ticStacToe\\Neutral.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Remove = pygame.transform.scale(pygame.image.load("ticStacToe\Remove.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+EndTurn = pygame.transform.scale(pygame.image.load("ticStacToe\EndTurn.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Undo = pygame.transform.scale(pygame.image.load("ticStacToe\\Undo.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
 BACKGROUND = pygame.transform.scale(pygame.image.load("ticStacToe\wood.jpg"), (WIDTH,WIDTH))
 
 dis_to_cen = WIDTH // ROWS // 2
 
 def init_buttons():
-    global images
-    images.append((GUI_WIDTH/2,WIDTH*.7,Both))
-    images.append((GUI_WIDTH/2,WIDTH*.5,Neutral))
-    images.append((GUI_WIDTH/2,WIDTH*.3,Remove))
+    global images, buttons
+    images.append((GUI_WIDTH/2,WIDTH*.3,Both))
+    images.append((GUI_WIDTH/2,WIDTH*.45,Neutral))
+    images.append((GUI_WIDTH/2,WIDTH*.6,Remove))
+    images.append((GUI_WIDTH/2,WIDTH*.75,Undo))
+    images.append((GUI_WIDTH/2,WIDTH*.9,EndTurn))
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.3-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.45-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.6-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.75-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.9-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
+    
 
 def init_grid():
     dis_to_cen = WIDTH // ROWS // 2
@@ -61,7 +71,34 @@ def draw_grid():
         pygame.draw.line(win, GRAY, (GUI_WIDTH, y), (WIDTH + GUI_WIDTH, y), 3)
 
 def click(game_array):
-    global x_turn, images
+    global x_turn, images, movesThisTurn
+    mode = "both"
+    locked = False
+    # check if any buttons are clicked
+    pos = pygame.mouse.get_pos()
+    clicked_sprites = [b for b in buttons if b.collidepoint(pos)]
+    if not locked: 
+        for i in clicked_sprites:
+            if i.y == 125: # place 1 of each
+                mode = "both"
+                print("both")
+
+            elif i.y == 200: # place 3 neutral
+                mode = "neutral"
+                print("neutral")
+
+            elif i.y == 275: # remove 2
+                mode = "remove"
+                print("remove")
+
+            elif i.y == 350: # undo
+                print("undo")
+                locked = False
+
+    if i.y == 425: # end turn
+        locked = False
+        print("end turn")
+        x_turn = not x_turn
 
     m_x, m_y = pygame.mouse.get_pos()
     for i in range(len(game_array)):
@@ -90,6 +127,8 @@ def click(game_array):
                             images.remove((x, y, X_IMAGE))
                         images.append((x, y, O_IMAGE))
                         game_array[i][j] = (x, y, 'o')
+
+    
 
 def check_win(game_array):
     # check rows
@@ -130,13 +169,16 @@ def render():
     pygame.display.update()
 
 def main():
-    global x_turn, images
+    global x_turn, images, buttons
+
 
     images = []
+    buttons = []
     run = True
     x_turn = True
     game_array = init_grid()
     images.append((GUI_WIDTH+WIDTH/2, WIDTH/2, BACKGROUND))
+    
     init_buttons()
 
     while run:
