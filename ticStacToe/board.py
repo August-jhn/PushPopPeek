@@ -14,30 +14,38 @@ BLACK = (0, 0, 0)
 GRAY = (125, 125, 125)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
+TAN = (255, 220, 110)
 
-X_IMAGE = pygame.transform.scale(pygame.image.load("ticStacToe\X_image.png"), (WIDTH/5,WIDTH/5))
-O_IMAGE = pygame.transform.scale(pygame.image.load("ticStacToe\O_image.png"), (WIDTH/5,WIDTH/5))
-Both = pygame.transform.scale(pygame.image.load("ticStacToe\Both.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-Neutral = pygame.transform.scale(pygame.image.load("ticStacToe\\Neutral.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-Remove = pygame.transform.scale(pygame.image.load("ticStacToe\Remove.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-EndTurn = pygame.transform.scale(pygame.image.load("ticStacToe\EndTurn.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-Undo = pygame.transform.scale(pygame.image.load("ticStacToe\\Undo.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-BACKGROUND = pygame.transform.scale(pygame.image.load("ticStacToe\wood.jpg"), (WIDTH,WIDTH))
+BLACK_STONE = pygame.transform.scale(pygame.image.load("BlackGoStone.png"), (WIDTH/5,WIDTH/5))
+WHITE_STONE = pygame.transform.scale(pygame.image.load("WhiteGoStone.png"), (WIDTH/5,WIDTH/5))
+RED_STONE = pygame.transform.scale(pygame.image.load("RedGoStone.png"), (WIDTH/5,WIDTH/5))
+BlackButton = pygame.transform.scale(pygame.image.load("BlackButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+WhiteButton = pygame.transform.scale(pygame.image.load("WhiteButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Neutral = pygame.transform.scale(pygame.image.load("RedButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Remove = pygame.transform.scale(pygame.image.load("Remove.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+EndTurn = pygame.transform.scale(pygame.image.load("EndTurn.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Undo = pygame.transform.scale(pygame.image.load("Undo.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+BACKGROUND = pygame.transform.scale(pygame.image.load("wood.jpg"), (WIDTH,WIDTH))
 
 dis_to_cen = WIDTH // ROWS // 2
 
 def init_buttons():
-    global images, buttons
-    images.append((GUI_WIDTH/2,WIDTH*.3,Both))
-    images.append((GUI_WIDTH/2,WIDTH*.45,Neutral))
-    images.append((GUI_WIDTH/2,WIDTH*.6,Remove))
-    images.append((GUI_WIDTH/2,WIDTH*.75,Undo))
-    images.append((GUI_WIDTH/2,WIDTH*.9,EndTurn))
-    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.3-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
-    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.45-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
-    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.6-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
-    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.75-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
-    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,WIDTH*.9-GUI_WIDTH*.1,GUI_WIDTH*.8,GUI_WIDTH*.2))
+    global images, buttons, BlackButtonY, NeutralY, RemoveY, UndoY, EndTurnY
+    images[GUI_WIDTH/2,WIDTH*.4] = BlackButton
+    images[GUI_WIDTH/2,WIDTH*.525] = Neutral
+    images[GUI_WIDTH/2,WIDTH*.65] = Remove
+    images[GUI_WIDTH/2,WIDTH*.775] = Undo
+    images[GUI_WIDTH/2,WIDTH*.9] = EndTurn
+    BlackButtonY = int(WIDTH*.4-WIDTH*.05)
+    NeutralY = int(WIDTH*.525-WIDTH*.05)
+    RemoveY = int(WIDTH*.65-WIDTH*.05)
+    UndoY = int(WIDTH*.775-WIDTH*.05)
+    EndTurnY = int(WIDTH*.9-WIDTH*.05)
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,BlackButtonY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # both
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,NeutralY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # 3 red
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,RemoveY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # remove
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,UndoY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # undo
+    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,EndTurnY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # end turn
     
 
 def init_grid():
@@ -71,64 +79,72 @@ def draw_grid():
         pygame.draw.line(win, GRAY, (GUI_WIDTH, y), (WIDTH + GUI_WIDTH, y), 3)
 
 def click(game_array):
-    global x_turn, images, movesThisTurn
-    mode = "both"
-    locked = False
+    global x_turn, images, maxMoves, mode, buttonsLocked
     # check if any buttons are clicked
     pos = pygame.mouse.get_pos()
     clicked_sprites = [b for b in buttons if b.collidepoint(pos)]
-    if not locked: 
-        for i in clicked_sprites:
-            if i.y == 125: # place 1 of each
+    for i in clicked_sprites:
+        print(i)
+        if not buttonsLocked:
+            if i.y == BlackButtonY: # place 1 of each
                 mode = "both"
+                maxMoves = 2
+                buttonsLocked = True
                 print("both")
 
-            elif i.y == 200: # place 3 neutral
+            elif i.y == NeutralY: # place 3 neutral
                 mode = "neutral"
+                maxMoves = 3
+                buttonsLocked = True
                 print("neutral")
 
-            elif i.y == 275: # remove 2
+            elif i.y == RemoveY: # remove 2
                 mode = "remove"
+                maxMoves = 2
+                buttonsLocked = True
                 print("remove")
 
-            elif i.y == 350: # undo
-                print("undo")
-                locked = False
+        if i.y == UndoY: # undo
+            print("undo")
+            buttonsLocked = False
 
-    if i.y == 425: # end turn
-        locked = False
-        print("end turn")
-        x_turn = not x_turn
+        elif i.y == EndTurnY: # end turn
+            buttonsLocked = False
+            print("end turn")
+            mode = "both"
+            maxMoves = 2
+            x_turn = not x_turn
+            if images[GUI_WIDTH/2, WIDTH*.4] == BlackButton:
+                images[GUI_WIDTH/2, WIDTH*.4] = WhiteButton
+            else:
+                images[GUI_WIDTH/2, WIDTH*.4] = BlackButton
 
     m_x, m_y = pygame.mouse.get_pos()
-    for i in range(len(game_array)):
-        for j in range(len(game_array[0])):
-            x, y, piece = game_array[i][j]
-            dis = math.sqrt((x - m_x) ** 2 + (y - m_y) ** 2)
-            if dis < WIDTH // ROWS // 2:
-                # remove previous piece
-                
-                if x_turn:
-                    x_turn = False
-                    if piece == 'x':
-                        x_turn = True
+    if maxMoves <= 0:
+        print("Out of Moves")
+    else:
+        for i in range(len(game_array)):
+            for j in range(len(game_array[0])):
+                x, y, piece = game_array[i][j]
+                dis = math.sqrt((x - m_x) ** 2 + (y - m_y) ** 2)
+                if dis < WIDTH // ROWS // 2:
+                    # remove previous piece
+                    if piece:
+                        images.pop((x, y)) # add to stack
+                    maxMoves -= 1
+                    if mode == "neutral":
+                        images[(x, y)] = RED_STONE
+                        game_array[i][j] = (x, y, 'red')
                     else:
-                        if piece == 'o':
-                            images.remove((x, y, O_IMAGE))
-                        images.append((x, y, X_IMAGE))
-                        game_array[i][j] = (x, y, 'x')
+                        if x_turn:
+                            images[(x, y)] = BLACK_STONE
+                            game_array[i][j] = (x, y, 'black')
 
-                else:
-                    x_turn = True
-                    if piece == 'o':
-                        x_turn = False
-                    else:
-                        if piece == 'x':
-                            images.remove((x, y, X_IMAGE))
-                        images.append((x, y, O_IMAGE))
-                        game_array[i][j] = (x, y, 'o')
+                        else:
+                            images[(x, y)] = WHITE_STONE
+                            game_array[i][j] = (x, y, 'white')
 
-    
+                    
 
 def check_win(game_array):
     # check rows
@@ -160,24 +176,29 @@ def check_win(game_array):
             print("win")
 
 def render():
-    win.fill(WHITE)
+    win.fill(TAN)
     draw_grid()
-    for image in images:
-        x, y, IMAGE = image
+    for (x,y) in images:
+        IMAGE = images[(x,y)]
         win.blit(IMAGE, (x - IMAGE.get_width() // 2, y - IMAGE.get_height() // 2))
 
     pygame.display.update()
 
 def main():
-    global x_turn, images, buttons
+    global x_turn, images, buttons, mode, buttonsLocked, maxMoves
 
 
-    images = []
+    images = {}
     buttons = []
     run = True
     x_turn = True
     game_array = init_grid()
-    images.append((GUI_WIDTH+WIDTH/2, WIDTH/2, BACKGROUND))
+    images[(GUI_WIDTH+WIDTH/2, WIDTH/2)] = BACKGROUND
+    
+
+    mode = "both"
+    maxMoves = 2
+    buttonsLocked = False
     
     init_buttons()
 
