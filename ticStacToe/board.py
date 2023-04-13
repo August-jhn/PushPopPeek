@@ -15,12 +15,12 @@ GRAY = (125, 125, 125)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
-X_IMAGE = pygame.transform.scale(pygame.image.load("ticStacToe\X_image.png"), (100,100))
-O_IMAGE = pygame.transform.scale(pygame.image.load("ticStacToe\O_image.png"), (100,100))
-Both = pygame.transform.scale(pygame.image.load("ticStacToe\Both.png"), (200,50))
-Neutral = pygame.transform.scale(pygame.image.load("ticStacToe\\Neutral.png"), (200,50))
-Remove = pygame.transform.scale(pygame.image.load("ticStacToe\Remove.png"), (200,50))
-BACKGROUND = pygame.transform.scale(pygame.image.load("ticStacToe\wood.jpg"), (WIDTH,WIDTH))
+X_IMAGE = pygame.transform.scale(pygame.image.load("X_image.png"), (100,100))
+O_IMAGE = pygame.transform.scale(pygame.image.load("O_image.png"), (100,100))
+Both = pygame.transform.scale(pygame.image.load("Both.png"), (200,50))
+Neutral = pygame.transform.scale(pygame.image.load("Neutral.png"), (200,50))
+Remove = pygame.transform.scale(pygame.image.load("Remove.png"), (200,50))
+BACKGROUND = pygame.transform.scale(pygame.image.load("wood.jpg"), (WIDTH,WIDTH))
 
 dis_to_cen = WIDTH // ROWS // 2
 

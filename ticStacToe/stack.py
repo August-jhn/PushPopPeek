@@ -9,15 +9,17 @@ class Stack:
         
     def push(self, data):
         new_node = Node(data)
-        if self.front is None:
-            new_node.next = self.front.next
+        if self.front is not None:
+            new_node.next = self.front
         self.front = new_node
+            
+        
         
     def pop(self):
         if self.front is None:
             return False #list empty
-        else:
-            self.front.next = self.front
+        
+        self.front = self.front.next
         return True
     
     def peek(self):
@@ -31,7 +33,32 @@ class Stack:
 
     def print(self):
         cur_node = self.front
+        
         display_text = ""
         while cur_node is not None:
             display_text += "{data} ".format(data = cur_node.data)
             cur_node = cur_node.next
+            
+
+        print(display_text)
+
+
+def test():
+    stack = Stack()
+    stack.push('a')
+    stack.push('b')
+    stack.push('c')
+    stack.print()
+    stack.pop()
+    stack.print()
+    stack.push('hi')
+    stack.print()
+    stack.pop()
+    stack.pop()
+    stack.print()
+    stack.pop()
+    stack.print()
+    stack.pop()
+
+if __name__ == "__main__":
+    test()
