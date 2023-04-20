@@ -4,8 +4,15 @@ class Node:
         self.next = None
     
 class Stack:
-    def __init__(self):
-        self.front = None
+    def __init__(self, headData = None):
+
+        self.baseValue = None
+        
+        if headData is None:
+            self.front = None
+        else:
+            self.front = Node(headData)
+            self.baseValue = headData
         
     def push(self, data):
         new_node = Node(data)
@@ -17,13 +24,17 @@ class Stack:
         
     def pop(self):
         if self.front is None:
+            self.front = self.baseValue
             return False #list empty
         
         self.front = self.front.next
+        
         return True
     
     def peek(self):
-        return self.front
+        if not self.front:
+            return self.front
+        return self.front.data
     
     def is_empty(self):
         if self.front is None:
@@ -44,7 +55,9 @@ class Stack:
 
 
 def test():
-    stack = Stack()
+    stack = Stack('')
+    if stack.peek():
+        print('peeked')
     stack.push('a')
     stack.push('b')
     stack.push('c')

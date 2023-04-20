@@ -1,9 +1,10 @@
 import pygame
 import math
+from stack import *
 
 pygame.init()
 
-WIDTH = 500
+WIDTH = 1000
 GUI_WIDTH = WIDTH/2
 ROWS = 4
 win = pygame.display.set_mode((WIDTH + GUI_WIDTH, WIDTH))
@@ -16,13 +17,6 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 TAN = (255, 220, 110)
 
-<<<<<<< HEAD
-X_IMAGE = pygame.transform.scale(pygame.image.load("X_image.png"), (100,100))
-O_IMAGE = pygame.transform.scale(pygame.image.load("O_image.png"), (100,100))
-Both = pygame.transform.scale(pygame.image.load("Both.png"), (200,50))
-Neutral = pygame.transform.scale(pygame.image.load("Neutral.png"), (200,50))
-Remove = pygame.transform.scale(pygame.image.load("Remove.png"), (200,50))
-=======
 BLACK_STONE = pygame.transform.scale(pygame.image.load("BlackGoStone.png"), (WIDTH/5,WIDTH/5))
 WHITE_STONE = pygame.transform.scale(pygame.image.load("WhiteGoStone.png"), (WIDTH/5,WIDTH/5))
 RED_STONE = pygame.transform.scale(pygame.image.load("RedGoStone.png"), (WIDTH/5,WIDTH/5))
@@ -32,7 +26,6 @@ Neutral = pygame.transform.scale(pygame.image.load("RedButton.png"), (GUI_WIDTH*
 Remove = pygame.transform.scale(pygame.image.load("Remove.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
 EndTurn = pygame.transform.scale(pygame.image.load("EndTurn.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
 Undo = pygame.transform.scale(pygame.image.load("Undo.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
->>>>>>> 46717ac654f58908fdad3253e9f40973377f81aa
 BACKGROUND = pygame.transform.scale(pygame.image.load("wood.jpg"), (WIDTH,WIDTH))
 
 dis_to_cen = WIDTH // ROWS // 2
@@ -60,6 +53,9 @@ def init_grid():
     dis_to_cen = WIDTH // ROWS // 2
 
     # Initializing the array
+    coord_array = [[None for i in range(4)] for j in range(4)]
+    stack_array = [[Stack("") for i in range(4)] for j in range(4)]
+
     game_array = [[None, None, None, None], [None, None, None, None], [None, None, None, None], [None, None, None, None]]
 
     for i in range(len(game_array)):
@@ -68,9 +64,10 @@ def init_grid():
             y = dis_to_cen * (2 * i + 1)
 
             # Adding centre coordinates
-            game_array[i][j] = (x, y,"")
+            coord_array[i][j] = (x,y)
+            # game_array[i][j] = (x, y,"")
 
-    return game_array
+    return (stack_array,coord_array)
 
 def draw_grid():
     gap = WIDTH // ROWS
@@ -86,7 +83,7 @@ def draw_grid():
         pygame.draw.line(win, GRAY, (x, 0), (x, WIDTH), 3)
         pygame.draw.line(win, GRAY, (GUI_WIDTH, y), (WIDTH + GUI_WIDTH, y), 3)
 
-def click(game_array):
+def click(stack_array, coord_array):
     global x_turn, images, maxMoves, mode, buttonsLocked
     # check if any buttons are clicked
     pos = pygame.mouse.get_pos()
@@ -131,57 +128,95 @@ def click(game_array):
     if maxMoves <= 0:
         print("Out of Moves")
     else:
-        for i in range(len(game_array)):
-            for j in range(len(game_array[0])):
-                x, y, piece = game_array[i][j]
+        for i in range(len(coord_array)):
+            for j in range(len(coord_array)):
+                x, y = coord_array[i][j]
                 dis = math.sqrt((x - m_x) ** 2 + (y - m_y) ** 2)
+
+                stack = stack_array[i][j]
+                piece = stack.peek()
+
                 if dis < WIDTH // ROWS // 2:
                     # remove previous piece
+                    
                     if piece:
+                        print(piece, 'peek')
+                        print(stack.print())
                         images.pop((x, y)) # add to stack
                     maxMoves -= 1
                     if mode == "neutral":
                         images[(x, y)] = RED_STONE
-                        game_array[i][j] = (x, y, 'red')
-                    else:
+
+                        stack_array[i][j].push('red')
+
+                        # game_array[i][j] = (x, y, 'red')
+                    elif mode == 'both':
                         if x_turn:
                             images[(x, y)] = BLACK_STONE
-                            game_array[i][j] = (x, y, 'black')
-
+                            # game_array[i][j] = (x, y, 'black')
+                            stack_array[i][j].push('black')
                         else:
                             images[(x, y)] = WHITE_STONE
-                            game_array[i][j] = (x, y, 'white')
+                            stack_array[i][j].push('white')
+                    elif mode == 'remove':
+                        # if piece:
+                        #     images.pop((x,y))
+                        stack.pop()
+                        print(stack.peek())
+                        
+                        if stack.peek() == 'white':
+                            images[(x,y)] = WHITE_STONE
+                        elif stack.peek() == 'black':
+                            images[(x,y)] = BLACK_STONE
+                        elif stack.peek() == 'neutral':
+                            images[(x,y)] = RED_STONE
+                        
 
+
+def win_game(color):
+    print("YOUVE WONNNNNNN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", color)
+    run = False
                     
 
-def check_win(game_array):
+def check_win(stack_array):
     # check rows
-    for row in game_array:
-        pieces = set([piece for _,_,piece in row])
+    for row in stack_array:
+        pieces = set([piece.peek() for piece in row])
         if len(pieces) == 1 and '' not in pieces:
-            print("win")
+            win_game(row[0].peek())
 
     # check cols
-    for cols in range(len(game_array[0])):
+    for col in range(len(stack_array[0])):
         pieces = set()
-        for row in game_array:
-            pieces.add(row[cols][2])
+        for row in stack_array:
+            pieces.add(row[col].peek())
         if len(pieces) == 1 and '' not in pieces:
-            print("win")
+            win_game(col[0])
 
-    # check diagonals
+    # # check diagonals
     diag1 = set()
+    
     diag2 = set()
-    for i, cols in enumerate(game_array[0]):
-        for j, row in enumerate(game_array):
-            if i == j:
-                diag1.add(game_array[i][j][2])
-            if i+j == len(game_array):
-                diag2.add(game_array[i][j][2])
+    
+    # for i, cols in enumerate(game_array[0]):
+    #     for j, row in enumerate(game_array):
+    #         if i == j:
+    #             diag1.add(game_array[i][j][2])
+    #         if i+j == len(game_array):
+    #             diag2.add(game_array[i][j][2])
+    # if len(diag1) == 1 and '' not in diag1:
+    #         print("win")
+    # if len(diag2) == 1 and '' not in diag2:
+    #         print("win")
+
+    for i in range(len(stack_array)):
+        diag1.add(stack_array[i][i].peek())
+        diag2.add(stack_array[len(stack_array)-i-1][i].peek())
+
     if len(diag1) == 1 and '' not in diag1:
-            print("win")
+        win_game(stack_array[0][0].peek())
     if len(diag2) == 1 and '' not in diag2:
-            print("win")
+        win_game(stack_array[len(stack_array)][0])
 
 def render():
     win.fill(TAN)
@@ -200,7 +235,7 @@ def main():
     buttons = []
     run = True
     x_turn = True
-    game_array = init_grid()
+    stack_array, coord_array = init_grid()
     images[(GUI_WIDTH+WIDTH/2, WIDTH/2)] = BACKGROUND
     
 
@@ -215,14 +250,14 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                click(game_array)
-                check_win(game_array)
+                click(stack_array, coord_array)
+                check_win(stack_array)
         render()
 
 
-while True:
-    if __name__ == '__main__':
-        main()
+
+if __name__ == '__main__':
+    main()
 
 # 4x4
 
