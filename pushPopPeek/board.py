@@ -8,7 +8,7 @@ WIDTH = 1000
 GUI_WIDTH = WIDTH/2
 ROWS = 4
 win = pygame.display.set_mode((WIDTH + GUI_WIDTH, WIDTH))
-pygame.display.set_caption("TicStacToe")
+pygame.display.set_caption("Push Pop Peek")
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -17,16 +17,16 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 TAN = (255, 220, 110)
 
-BLACK_STONE = pygame.transform.scale(pygame.image.load("BlackGoStone.png"), (WIDTH/5,WIDTH/5))
-WHITE_STONE = pygame.transform.scale(pygame.image.load("WhiteGoStone.png"), (WIDTH/5,WIDTH/5))
-RED_STONE = pygame.transform.scale(pygame.image.load("RedGoStone.png"), (WIDTH/5,WIDTH/5))
-BlackButton = pygame.transform.scale(pygame.image.load("BlackButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-WhiteButton = pygame.transform.scale(pygame.image.load("WhiteButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-Neutral = pygame.transform.scale(pygame.image.load("RedButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-Remove = pygame.transform.scale(pygame.image.load("Remove.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-EndTurn = pygame.transform.scale(pygame.image.load("EndTurn.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-Undo = pygame.transform.scale(pygame.image.load("Undo.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-BACKGROUND = pygame.transform.scale(pygame.image.load("wood.jpg"), (WIDTH,WIDTH))
+BLACK_STONE = pygame.transform.scale(pygame.image.load("images/BlackGoStone.png"), (WIDTH/5,WIDTH/5))
+WHITE_STONE = pygame.transform.scale(pygame.image.load("images/WhiteGoStone.png"), (WIDTH/5,WIDTH/5))
+RED_STONE = pygame.transform.scale(pygame.image.load("images/RedGoStone.png"), (WIDTH/5,WIDTH/5))
+BlackButton = pygame.transform.scale(pygame.image.load("images/BlackButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+WhiteButton = pygame.transform.scale(pygame.image.load("images/WhiteButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Neutral = pygame.transform.scale(pygame.image.load("images/RedButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Remove = pygame.transform.scale(pygame.image.load("images/Remove.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+EndTurn = pygame.transform.scale(pygame.image.load("images/EndTurn.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+Undo = pygame.transform.scale(pygame.image.load("images/Undo.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
+BACKGROUND = pygame.transform.scale(pygame.image.load("images/wood.jpg"), (WIDTH,WIDTH))
 
 dis_to_cen = WIDTH // ROWS // 2
 

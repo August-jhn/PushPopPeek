@@ -1,0 +1,47 @@
+h1 {
+    
+    font-size : 40pt;
+    position : absolute;
+    left : 40vw;
+}
+
+h2 {
+    margin : 20px;
+}
+
+h3 {
+
+    margin : 25px;
+
+}
+
+p {
+    margin: 10px;
+}
+
+body {
+    background : tan;
+}
+
+.header {
+    background-image : url('pushPopPeek/images/wood.jpg');
+    width: 100vw;
+    height: 100px;
+}
+
+.description {
+    background : rgb(170, 124, 65);
+    width: 40vw;
+    position: absolute;
+    left : 10vw;
+    top : 150px;
+}
+
+.preview {
+    background : rgb(170, 124, 65);
+    width: 30vw;
+    flex-flow: column;
+    position: absolute;
+    top : 150px;
+    left: 55vw;
+}
