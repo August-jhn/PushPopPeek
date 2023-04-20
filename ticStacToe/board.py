@@ -216,7 +216,7 @@ def check_win(stack_array):
     if len(diag1) == 1 and '' not in diag1:
         win_game(stack_array[0][0].peek())
     if len(diag2) == 1 and '' not in diag2:
-        win_game(stack_array[len(stack_array)][0])
+        win_game(stack_array[len(stack_array) - 1][0])
 
 def render():
     win.fill(TAN)
