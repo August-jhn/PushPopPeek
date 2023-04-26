@@ -1,6 +1,7 @@
 import pygame
 import math
 from stack import *
+from copy import *
 
 pygame.init()
 
@@ -84,7 +85,7 @@ def draw_grid():
         pygame.draw.line(win, GRAY, (GUI_WIDTH, y), (WIDTH + GUI_WIDTH, y), 3)
 
 def click(stack_array, coord_array):
-    global x_turn, images, maxMoves, mode, buttonsLocked
+    global x_turn, images, maxMoves, mode, buttonsLocked, backup_stack_array, backup_images
     # check if any buttons are clicked
     pos = pygame.mouse.get_pos()
     clicked_sprites = [b for b in buttons if b.collidepoint(pos)]
@@ -111,7 +112,15 @@ def click(stack_array, coord_array):
 
         if i.y == UndoY: # undo
             print("undo")
+
+            stack_array = deepcopy(backup_stack_array)
+            images = backup_images.copy()
+
             buttonsLocked = False
+
+            maxMoves = 2
+
+            print(images)
 
         elif i.y == EndTurnY: # end turn
             buttonsLocked = False
@@ -123,6 +132,10 @@ def click(stack_array, coord_array):
                 images[GUI_WIDTH/2, WIDTH*.4] = WhiteButton
             else:
                 images[GUI_WIDTH/2, WIDTH*.4] = BlackButton
+
+            backup_stack_array = deepcopy(stack_array)
+            backup_images = images.copy()
+            #somehow clear the undo and reset the backup stack array
 
     m_x, m_y = pygame.mouse.get_pos()
     if maxMoves <= 0:
@@ -229,8 +242,7 @@ def render():
     pygame.display.update()
 
 def main():
-    global x_turn, images, buttons, mode, buttonsLocked, maxMoves
-
+    global x_turn, images, buttons, mode, buttonsLocked, maxMoves, backup_stack_array, backup_images
 
     images = {}
     buttons = []
@@ -245,6 +257,9 @@ def main():
     buttonsLocked = False
     
     init_buttons()
+
+    backup_images = images.copy()
+    backup_stack_array = deepcopy(stack_array)
 
     while run:
         for event in pygame.event.get():
