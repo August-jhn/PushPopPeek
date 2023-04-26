@@ -23,7 +23,7 @@ class Stack:
         
         
     def pop(self):
-        if self.front is None:
+        if self.front is None or self.front is self.baseValue:
             self.front = self.baseValue
             return False #list empty
         
