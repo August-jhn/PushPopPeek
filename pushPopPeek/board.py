@@ -168,7 +168,7 @@ def click(stack_array, coord_array):
                             images[(x,y)] = WHITE_STONE
                         elif stack.peek() == 'black':
                             images[(x,y)] = BLACK_STONE
-                        elif stack.peek() == 'neutral':
+                        elif stack.peek() == 'red':
                             images[(x,y)] = RED_STONE
                         
 
@@ -191,7 +191,7 @@ def check_win(stack_array):
         for row in stack_array:
             pieces.add(row[col].peek())
         if len(pieces) == 1 and '' not in pieces:
-            win_game(col[0])
+            win_game(stack_array[1][col].peek())
 
     # # check diagonals
     diag1 = set()
@@ -216,7 +216,7 @@ def check_win(stack_array):
     if len(diag1) == 1 and '' not in diag1:
         win_game(stack_array[0][0].peek())
     if len(diag2) == 1 and '' not in diag2:
-        win_game(stack_array[len(stack_array) - 1][0])
+        win_game(stack_array[len(stack_array) - 1][0].peek())
 
 def render():
     win.fill(TAN)
