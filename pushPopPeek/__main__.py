@@ -158,6 +158,7 @@ def click(stack_array, coord_array):
                         else:
                             images[(x, y)] = WHITE_STONE
                             stack_array[i][j].push('white')
+                        mode = 'neutral'
                     elif mode == 'remove':
                         # if piece:
                         #     images.pop((x,y))
