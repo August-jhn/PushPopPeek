@@ -2,6 +2,12 @@ class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
+
+    def get_next(self):
+        return self.next
+    
+    def get_data(self):
+        return self.data
     
 class Stack:
     def __init__(self, headData = None):
@@ -53,6 +59,27 @@ class Stack:
 
         print(display_text)
 
+    def get_front(self): 
+        return self.front
+
+    @staticmethod
+    def copyStack(stackToCopy):
+        #get stack info
+        data_list = []
+        cur_node = stackToCopy.get_front()
+        while cur_node is not None:
+            #dostuff
+            data_list.insert(0,cur_node.data)
+            cur_node = cur_node.get_next()
+        
+        #make new stack
+
+        newStack = Stack()
+        for dat in data_list:
+            newStack.push(dat)
+
+        return newStack
+
 
 def test():
     stack = Stack('')
@@ -61,17 +88,18 @@ def test():
     stack.push('a')
     stack.push('b')
     stack.push('c')
+    print('first stack')
     stack.print()
-    stack.pop()
+
+    newstack = Stack.copyStack(stack)
+    print('next stack')
+    newstack.print()
+    print('\n')
+    print('adding stuff to old stack')
+    stack.push('Iaddedthis')
     stack.print()
-    stack.push('hi')
-    stack.print()
-    stack.pop()
-    stack.pop()
-    stack.print()
-    stack.pop()
-    stack.print()
-    stack.pop()
+    print('and the new stack remains unchanged:')
+    newstack.print()
 
 if __name__ == "__main__":
     test()
