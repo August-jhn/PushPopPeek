@@ -85,68 +85,62 @@ def draw_grid():
         pygame.draw.line(win, GRAY, (GUI_WIDTH, y), (WIDTH + GUI_WIDTH, y), 3)
 
 def click(stack_array, coord_array):
-    global x_turn, images, maxMoves, mode, buttonsLocked, backup_stack_array, backup_images
+    global x_turn, images, max_moves, mode, buttons_locked, backup_stack_array, backup_images
     # check if any buttons are clicked
     pos = pygame.mouse.get_pos()
     clicked_sprites = [b for b in buttons if b.collidepoint(pos)]
     for i in clicked_sprites:
         print(i)
-        if not buttonsLocked:
+        if not buttons_locked:
             if i.y == BlackButtonY: # place 1 of each
                 mode = "both"
-                maxMoves = 2
-                buttonsLocked = True
+                max_moves = 2
+                buttons_locked = True
                 print("both")
 
             elif i.y == NeutralY: # place 3 neutral
                 mode = "neutral"
-                maxMoves = 3
-                buttonsLocked = True
+                max_moves = 3
+                buttons_locked = True
                 print("neutral")
 
             elif i.y == RemoveY: # remove 2
                 mode = "remove"
-                maxMoves = 2
-                buttonsLocked = True
+                max_moves = 2
+                buttons_locked = True
                 print("remove")
 
         if i.y == UndoY: # undo
             print("undo")
 
-            stack_array = deepcopy(backup_stack_array)
+            stack_array = copyArray(backup_stack_array)
             images = backup_images.copy()
 
-            buttonsLocked = False
+            buttons_locked = False
 
-            maxMoves = 2
+            max_moves = 2
 
             print(images)
+            print(stack_array)
 
         elif i.y == EndTurnY: # end turn
-            buttonsLocked = False
+            buttons_locked = False
             print("end turn")
             mode = "both"
-            maxMoves = 2
+            max_moves = 2
             x_turn = not x_turn
             if images[GUI_WIDTH/2, WIDTH*.4] == BlackButton:
                 images[GUI_WIDTH/2, WIDTH*.4] = WhiteButton
             else:
                 images[GUI_WIDTH/2, WIDTH*.4] = BlackButton
-            backup_stack_array = []
-            for row in stack_array:
-                curRow = []
-                for stack in row:
-                    cur_stack = Stack()
-                    while stack.peek():
-                        cur_stack.push(stack.pop())
-                    curRow.append(cur_stack)
-                backup_stack_array.append(curRow)
+            
+            backup_stack_array = copyArray(stack_array)
 
             backup_images = images.copy()
             #somehow clear the undo and reset the backup stack array
 
     m_x, m_y = pygame.mouse.get_pos()
-    if maxMoves <= 0:
+    if max_moves <= 0:
         print("Out of Moves")
     else:
         for i in range(len(coord_array)):
@@ -164,7 +158,7 @@ def click(stack_array, coord_array):
                         # print(piece, 'peek')
                         # print(stack.print())
                         images.pop((x, y)) # add to stack
-                    maxMoves -= 1
+                    max_moves -= 1
                     if mode == "neutral":
                         images[(x, y)] = RED_STONE
 
@@ -249,8 +243,18 @@ def render():
 
     pygame.display.update()
 
+def copyArray(array):
+    new_array = []
+    for row in array:
+        curRow = []
+        for stack in row:
+            cur_stack = Stack.copyStack(stack)
+            curRow.append(cur_stack)
+        new_array.append(curRow)
+    return new_array
+
 def main():
-    global x_turn, images, buttons, mode, buttonsLocked, maxMoves, backup_stack_array, backup_images
+    global x_turn, images, buttons, mode, buttons_locked, max_moves, backup_stack_array, backup_images
 
     images = {}
     buttons = []
@@ -261,13 +265,13 @@ def main():
     
 
     mode = "both"
-    maxMoves = 2
-    buttonsLocked = False
+    max_moves = 2
+    buttons_locked = False
     
     init_buttons()
 
     backup_images = images.copy()
-    backup_stack_array = deepcopy(stack_array)
+    backup_stack_array = copyArray(stack_array)
 
     while run:
         for event in pygame.event.get():
