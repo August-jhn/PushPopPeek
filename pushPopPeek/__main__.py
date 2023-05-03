@@ -132,8 +132,16 @@ def click(stack_array, coord_array):
                 images[GUI_WIDTH/2, WIDTH*.4] = WhiteButton
             else:
                 images[GUI_WIDTH/2, WIDTH*.4] = BlackButton
+            backup_stack_array = []
+            for row in stack_array:
+                curRow = []
+                for stack in row:
+                    cur_stack = Stack()
+                    while stack.peek():
+                        cur_stack.push(stack.pop())
+                    curRow.append(cur_stack)
+                backup_stack_array.append(curRow)
 
-            backup_stack_array = deepcopy(stack_array)
             backup_images = images.copy()
             #somehow clear the undo and reset the backup stack array
 
@@ -153,8 +161,8 @@ def click(stack_array, coord_array):
                     # remove previous piece
                     
                     if piece:
-                        print(piece, 'peek')
-                        print(stack.print())
+                        # print(piece, 'peek')
+                        # print(stack.print())
                         images.pop((x, y)) # add to stack
                     maxMoves -= 1
                     if mode == "neutral":

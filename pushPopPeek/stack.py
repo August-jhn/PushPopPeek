@@ -25,11 +25,11 @@ class Stack:
     def pop(self):
         if self.front is None or self.front is self.baseValue:
             self.front = self.baseValue
-            return False #list empty
-        
+            return None #list empty
+        removed = self.front
         self.front = self.front.next
         
-        return True
+        return removed
     
     def peek(self):
         if not self.front:
