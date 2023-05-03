@@ -10,6 +10,10 @@ class Node:
         return self.data
     
 class Stack:
+
+    def __repr__(self):
+        return self.print()
+
     def __init__(self, headData = None):
 
         self.baseValue = None
@@ -58,6 +62,7 @@ class Stack:
             
 
         print(display_text)
+        return display_text
 
     def get_front(self): 
         return self.front
