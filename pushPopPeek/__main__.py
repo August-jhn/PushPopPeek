@@ -157,7 +157,10 @@ def click(stack_array, coord_array):
                     if piece:
                         # print(piece, 'peek')
                         # print(stack.print())
-                        images.pop((x, y)) # add to stack
+                        try:
+                            images.pop((x, y)) # add to stack
+                        except:
+                            print('error')
                     max_moves -= 1
                     if mode == "neutral":
                         images[(x, y)] = RED_STONE

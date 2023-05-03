@@ -38,6 +38,9 @@ class Stack:
             return None #list empty
         removed = self.front
         self.front = self.front.next
+        if self.front is None:
+            self.front = self.baseValue
+
         
         return removed
     
@@ -79,7 +82,7 @@ class Stack:
         
         #make new stack
 
-        newStack = Stack()
+        newStack = Stack(headData = '')
         for dat in data_list:
             newStack.push(dat)
 
