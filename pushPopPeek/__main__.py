@@ -157,9 +157,7 @@ def click(stack_array, coord_array):
                     elif mode == 'remove':
                         # if piece:
                         #     images.pop((x,y))
-                        x = stack.pop()
-                        print(x)
-                        if not x:
+                        if not stack.pop():
                             max_moves += 1
                         
                         if stack.peek() == 'white':
@@ -207,7 +205,7 @@ def check_win(stack_array):
 def render():
     win.fill(TAN)
     draw_grid()
-    for (x,y) in images:
+    for x,y in images:
         IMAGE = images[(x,y)]
         win.blit(IMAGE, (x - IMAGE.get_width() // 2, y - IMAGE.get_height() // 2))
 
