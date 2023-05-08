@@ -50,9 +50,7 @@ class Stack:
         return self.front.data
     
     def is_empty(self):
-        if self.front is None:
-            return True
-        else:
+        if self.front is self.baseValue:
             return False
 
     def print(self):
@@ -75,7 +73,7 @@ class Stack:
         #get stack info
         data_list = []
         cur_node = stackToCopy.get_front()
-        while cur_node is not None:
+        while cur_node:
             #dostuff
             data_list.insert(0,cur_node.data)
             cur_node = cur_node.get_next()
