@@ -105,7 +105,7 @@ def click(stack_array, coord_array):
                 buttons_locked = True
                 print("remove")
 
-        elif i.y == EndTurnY: # end turn
+        if i.y == EndTurnY: # end turn
             buttons_locked = False
             print("end turn")
             mode = "both"
@@ -180,7 +180,7 @@ def check_win(stack_array):
     # check rows
     for row in stack_array:
         pieces = set([piece.peek() for piece in row])
-        if len(pieces) == 1 and '' not in pieces:
+        if len(pieces) == 1 and '' not in pieces and 'red' not in pieces:
             win_game(row[0].peek())
 
     # check cols
@@ -188,7 +188,7 @@ def check_win(stack_array):
         pieces = set()
         for row in stack_array:
             pieces.add(row[col].peek())
-        if len(pieces) == 1 and '' not in pieces:
+        if len(pieces) == 1 and '' not in pieces and 'red' not in pieces:
             win_game(stack_array[1][col].peek())
 
     # # check diagonals
@@ -200,9 +200,9 @@ def check_win(stack_array):
         diag1.add(stack_array[i][i].peek())
         diag2.add(stack_array[len(stack_array)-i-1][i].peek())
 
-    if len(diag1) == 1 and '' not in diag1:
+    if len(diag1) == 1 and '' not in diag1 and 'red' not in diag1:
         win_game(stack_array[0][0].peek())
-    if len(diag2) == 1 and '' not in diag2:
+    if len(diag2) == 1 and '' not in diag2 and 'red' not in diag2:
         win_game(stack_array[len(stack_array) - 1][0].peek())
 
 def render():
