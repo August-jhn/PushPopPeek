@@ -5,7 +5,7 @@ from copy import *
 
 pygame.init()
 
-WIDTH = 1000
+WIDTH = 500
 GUI_WIDTH = WIDTH/2
 ROWS = 4
 win = pygame.display.set_mode((WIDTH + GUI_WIDTH, WIDTH))
@@ -26,7 +26,6 @@ WhiteButton = pygame.transform.scale(pygame.image.load("images/WhiteButton.png")
 Neutral = pygame.transform.scale(pygame.image.load("images/RedButton.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
 Remove = pygame.transform.scale(pygame.image.load("images/Remove.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
 EndTurn = pygame.transform.scale(pygame.image.load("images/EndTurn.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
-Undo = pygame.transform.scale(pygame.image.load("images/Undo.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
 BACKGROUND = pygame.transform.scale(pygame.image.load("images/wood.jpg"), (WIDTH,WIDTH))
 
 dis_to_cen = WIDTH // ROWS // 2
@@ -36,17 +35,14 @@ def init_buttons():
     images[GUI_WIDTH/2,WIDTH*.4] = BlackButton
     images[GUI_WIDTH/2,WIDTH*.525] = Neutral
     images[GUI_WIDTH/2,WIDTH*.65] = Remove
-    images[GUI_WIDTH/2,WIDTH*.775] = Undo
     images[GUI_WIDTH/2,WIDTH*.9] = EndTurn
     BlackButtonY = int(WIDTH*.4-WIDTH*.05)
     NeutralY = int(WIDTH*.525-WIDTH*.05)
     RemoveY = int(WIDTH*.65-WIDTH*.05)
-    UndoY = int(WIDTH*.775-WIDTH*.05)
     EndTurnY = int(WIDTH*.9-WIDTH*.05)
     buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,BlackButtonY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # both
     buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,NeutralY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # 3 red
     buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,RemoveY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # remove
-    buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,UndoY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # undo
     buttons.append(pygame.Rect(GUI_WIDTH/2-GUI_WIDTH*.4,EndTurnY,GUI_WIDTH*.8,GUI_WIDTH*.2)) # end turn
     
 
@@ -64,9 +60,8 @@ def init_grid():
             x = dis_to_cen * (2 * j + 1) + GUI_WIDTH
             y = dis_to_cen * (2 * i + 1)
 
-            # Adding centre coordinates
+            # Adding center coordinates
             coord_array[i][j] = (x,y)
-            # game_array[i][j] = (x, y,"")
 
     return (stack_array,coord_array)
 
@@ -110,19 +105,6 @@ def click(stack_array, coord_array):
                 buttons_locked = True
                 print("remove")
 
-        if i.y == UndoY: # undo
-            print("undo")
-
-            stack_array = copyArray(backup_stack_array)
-            images = backup_images.copy()
-
-            buttons_locked = False
-
-            max_moves = 2
-
-            print(images)
-            print(stack_array)
-
         elif i.y == EndTurnY: # end turn
             buttons_locked = False
             print("end turn")
@@ -133,11 +115,6 @@ def click(stack_array, coord_array):
                 images[GUI_WIDTH/2, WIDTH*.4] = WhiteButton
             else:
                 images[GUI_WIDTH/2, WIDTH*.4] = BlackButton
-            
-            backup_stack_array = copyArray(stack_array)
-
-            backup_images = images.copy()
-            #somehow clear the undo and reset the backup stack array
 
     m_x, m_y = pygame.mouse.get_pos()
     if max_moves <= 0:
@@ -180,7 +157,10 @@ def click(stack_array, coord_array):
                     elif mode == 'remove':
                         # if piece:
                         #     images.pop((x,y))
-                        stack.pop()
+                        if stack.is_empty():
+                            max_moves += 1
+                        else:
+                            stack.pop()
                         print(stack.peek())
                         
                         if stack.peek() == 'white':
@@ -190,7 +170,6 @@ def click(stack_array, coord_array):
                         elif stack.peek() == 'red':
                             images[(x,y)] = RED_STONE
                         
-
 
 def win_game(color):
     print("YOUVE WONNNNNNN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", color)
@@ -216,17 +195,6 @@ def check_win(stack_array):
     diag1 = set()
     
     diag2 = set()
-    
-    # for i, cols in enumerate(game_array[0]):
-    #     for j, row in enumerate(game_array):
-    #         if i == j:
-    #             diag1.add(game_array[i][j][2])
-    #         if i+j == len(game_array):
-    #             diag2.add(game_array[i][j][2])
-    # if len(diag1) == 1 and '' not in diag1:
-    #         print("win")
-    # if len(diag2) == 1 and '' not in diag2:
-    #         print("win")
 
     for i in range(len(stack_array)):
         diag1.add(stack_array[i][i].peek())
@@ -246,16 +214,6 @@ def render():
 
     pygame.display.update()
 
-def copyArray(array):
-    new_array = []
-    for row in array:
-        curRow = []
-        for stack in row:
-            cur_stack = Stack.copyStack(stack)
-            curRow.append(cur_stack)
-        new_array.append(curRow)
-    return new_array
-
 def main():
     global x_turn, images, buttons, mode, buttons_locked, max_moves, backup_stack_array, backup_images
 
@@ -272,9 +230,6 @@ def main():
     buttons_locked = False
     
     init_buttons()
-
-    backup_images = images.copy()
-    backup_stack_array = copyArray(stack_array)
 
     while run:
         for event in pygame.event.get():
