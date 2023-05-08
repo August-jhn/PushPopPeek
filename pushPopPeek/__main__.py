@@ -27,6 +27,9 @@ Neutral = pygame.transform.scale(pygame.image.load("images/RedButton.png"), (GUI
 Remove = pygame.transform.scale(pygame.image.load("images/Remove.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
 EndTurn = pygame.transform.scale(pygame.image.load("images/EndTurn.png"), (GUI_WIDTH*.8,GUI_WIDTH*.2))
 BACKGROUND = pygame.transform.scale(pygame.image.load("images/wood.jpg"), (WIDTH,WIDTH))
+BLACKWIN = pygame.transform.scale(pygame.image.load("images/BlackWins.png"), (WIDTH*.75,WIDTH*.75))
+WHITEWIN = pygame.transform.scale(pygame.image.load("images/WhiteWins.png"), (WIDTH*.75,WIDTH*.75))
+# OUTOFMOVES = pygame.transform.scale(pygame.image.load("images/wood.jpg"), (WIDTH*.75,WIDTH*.75))
 
 dis_to_cen = WIDTH // ROWS // 2
 
@@ -169,7 +172,16 @@ def click(stack_array, coord_array):
                         
 
 def win_game(color):
-    print("YOUVE WONNNNNNN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", color)
+    global run, winImage, center_x, center_y
+    
+    center_x = GUI_WIDTH + WIDTH/2
+    center_y = WIDTH/2
+    if color == 'black':
+        winImage = BLACKWIN
+        # images[center_x, center_y] = BLACKWIN
+    else:
+        winImage = WHITEWIN
+        # images[center_x, center_y] = WHITEWIN
     run = False
                     
 
@@ -212,7 +224,7 @@ def render():
     pygame.display.update()
 
 def main():
-    global x_turn, images, buttons, mode, buttons_locked, max_moves, backup_stack_array, backup_images
+    global x_turn, images, buttons, mode, buttons_locked, max_moves, run, winImage
 
     images = {}
     buttons = []
@@ -237,6 +249,12 @@ def main():
                 check_win(stack_array)
         render()
 
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pygame.quit()
+        win.blit(winImage, (center_x - winImage.get_width() // 2, center_y - winImage.get_height() // 2))
+        pygame.display.update()
 
 
 if __name__ == '__main__':
