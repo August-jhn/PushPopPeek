@@ -29,9 +29,12 @@ EndTurn = pygame.transform.scale(pygame.image.load("images/EndTurn.png"), (GUI_W
 BACKGROUND = pygame.transform.scale(pygame.image.load("images/wood.jpg"), (WIDTH,WIDTH))
 BLACKWIN = pygame.transform.scale(pygame.image.load("images/BlackWins.png"), (WIDTH*.75,WIDTH*.75))
 WHITEWIN = pygame.transform.scale(pygame.image.load("images/WhiteWins.png"), (WIDTH*.75,WIDTH*.75))
-# OUTOFMOVES = pygame.transform.scale(pygame.image.load("images/wood.jpg"), (WIDTH*.75,WIDTH*.75))
+OUTOFMOVES = pygame.transform.scale(pygame.image.load("images/OutOfMoves.png"), (WIDTH*.75,WIDTH*.75))
 
 dis_to_cen = WIDTH // ROWS // 2
+
+center_x = GUI_WIDTH + WIDTH/2
+center_y = WIDTH/2
 
 def init_buttons():
     global images, buttons, BlackButtonY, NeutralY, RemoveY, UndoY, EndTurnY
@@ -83,7 +86,7 @@ def draw_grid():
         pygame.draw.line(win, GRAY, (GUI_WIDTH, y), (WIDTH + GUI_WIDTH, y), 3)
 
 def click(stack_array, coord_array):
-    global x_turn, images, max_moves, mode, buttons_locked, backup_stack_array, backup_images
+    global x_turn, images, max_moves, mode, buttons_locked, out_of_moves
     # check if any buttons are clicked
     pos = pygame.mouse.get_pos()
     clicked_sprites = [b for b in buttons if b.collidepoint(pos)]
@@ -113,6 +116,7 @@ def click(stack_array, coord_array):
             print("end turn")
             mode = "both"
             max_moves = 2
+            out_of_moves = False
             x_turn = not x_turn
             if images[GUI_WIDTH/2, WIDTH*.4] == BlackButton:
                 images[GUI_WIDTH/2, WIDTH*.4] = WhiteButton
@@ -121,7 +125,8 @@ def click(stack_array, coord_array):
 
     m_x, m_y = pygame.mouse.get_pos()
     if max_moves <= 0:
-        print("Out of Moves")
+        out_of_moves = True
+        # print("Out of Moves")
     else:
         for i in range(len(coord_array)):
             for j in range(len(coord_array)):
@@ -172,10 +177,7 @@ def click(stack_array, coord_array):
                         
 
 def win_game(color):
-    global run, winImage, center_x, center_y
-    
-    center_x = GUI_WIDTH + WIDTH/2
-    center_y = WIDTH/2
+    global run, winImage
     if color == 'black':
         winImage = BLACKWIN
         # images[center_x, center_y] = BLACKWIN
@@ -221,10 +223,12 @@ def render():
         IMAGE = images[(x,y)]
         win.blit(IMAGE, (x - IMAGE.get_width() // 2, y - IMAGE.get_height() // 2))
 
+    if out_of_moves:
+        win.blit(OUTOFMOVES, (center_x - OUTOFMOVES.get_width() // 2, center_y - OUTOFMOVES.get_height() // 2))
     pygame.display.update()
 
 def main():
-    global x_turn, images, buttons, mode, buttons_locked, max_moves, run, winImage
+    global x_turn, images, buttons, mode, buttons_locked, max_moves, run, winImage, out_of_moves
 
     images = {}
     buttons = []
@@ -236,6 +240,7 @@ def main():
 
     mode = "both"
     max_moves = 2
+    out_of_moves = False
     buttons_locked = False
     
     init_buttons()
