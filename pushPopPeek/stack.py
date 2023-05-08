@@ -14,15 +14,11 @@ class Stack:
     def __repr__(self):
         return self.print()
 
-    def __init__(self, headData = None):
+    def __init__(self):
 
-        self.baseValue = None
+        self.front = None
         
-        if headData is None:
-            self.front = None
-        else:
-            self.front = Node(headData)
-            self.baseValue = headData
+            
         
     def push(self, data):
         new_node = Node(data)
@@ -33,16 +29,12 @@ class Stack:
         
         
     def pop(self):
-        if self.front is None or self.front is self.baseValue:
-            self.front = self.baseValue
+        if self.front is None:
             return None #list empty
         removed = self.front
         self.front = self.front.next
-        if self.front is None:
-            self.front = self.baseValue
+        return removed.data
 
-        
-        return removed
     
     def peek(self):
         if not self.front:
@@ -50,8 +42,9 @@ class Stack:
         return self.front.data
     
     def is_empty(self):
-        if self.front is self.baseValue:
-            return False
+        if self.front is None:
+            return True
+        return False
 
     def print(self):
         cur_node = self.front
@@ -88,7 +81,7 @@ class Stack:
 
 
 def test():
-    stack = Stack('')
+    stack = Stack()
     if stack.peek():
         print('peeked')
     stack.push('a')
@@ -97,7 +90,7 @@ def test():
     print('first stack')
     stack.print()
 
-    newstack = Stack.copyStack(stack)
+    newstack = Stack.copyStack()
     print('next stack')
     newstack.print()
     print('\n')
