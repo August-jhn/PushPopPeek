@@ -1,7 +1,6 @@
 import pygame
 import math
 from stack import *
-from copy import *
 
 pygame.init()
 

@@ -61,23 +61,23 @@ class Stack:
     def get_front(self): 
         return self.front
 
-    @staticmethod
-    def copyStack(stackToCopy):
-        #get stack info
-        data_list = []
-        cur_node = stackToCopy.get_front()
-        while cur_node:
-            #dostuff
-            data_list.insert(0,cur_node.data)
-            cur_node = cur_node.get_next()
+    # @staticmethod
+    # def copyStack(stackToCopy):
+    #     #get stack info
+    #     data_list = []
+    #     cur_node = stackToCopy.get_front()
+    #     while cur_node:
+    #         #dostuff
+    #         data_list.insert(0,cur_node.data)
+    #         cur_node = cur_node.get_next()
         
-        #make new stack
+    #     #make new stack
 
-        newStack = Stack(headData = '')
-        for dat in data_list:
-            newStack.push(dat)
+    #     newStack = Stack(headData = '')
+    #     for dat in data_list:
+    #         newStack.push(dat)
 
-        return newStack
+    #     return newStack
 
 
 def test():
@@ -90,15 +90,15 @@ def test():
     print('first stack')
     stack.print()
 
-    newstack = Stack.copyStack()
-    print('next stack')
-    newstack.print()
-    print('\n')
-    print('adding stuff to old stack')
-    stack.push('Iaddedthis')
-    stack.print()
-    print('and the new stack remains unchanged:')
-    newstack.print()
+    # newstack = Stack.copyStack()
+    # print('next stack')
+    # newstack.print()
+    # print('\n')
+    # print('adding stuff to old stack')
+    # stack.push('Iaddedthis')
+    # stack.print()
+    # print('and the new stack remains unchanged:')
+    # newstack.print()
 
 if __name__ == "__main__":
     test()
