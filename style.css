@@ -5,6 +5,26 @@ h1 {
     left : 40vw;
 }
 
+
+a {
+    color:black;
+}
+a:hover {
+    color:rgb(58, 33, 0);
+}
+a:visited {
+    color: red;
+
+}
+
+.navbar {
+    height: 100px;
+    background-color: white;
+    font-size: 25pt;
+}
+
+
+
 h2 {
     margin : 20px;
 }
@@ -16,6 +36,7 @@ h3 {
 }
 
 p {
+    font-size: 16pt;
     margin: 10px;
 }
 
@@ -26,22 +47,55 @@ body {
 .header {
     background-image : url('pushPopPeek/images/wood.jpg');
     width: 100vw;
-    height: 100px;
+    height: 20vh;
 }
 
 .description {
+    font-size: 16pt;
     background : rgb(170, 124, 65);
     width: 40vw;
     position: absolute;
-    left : 10vw;
-    top : 150px;
+    left : 20vh;
+    top : 350px;
 }
 
 .preview {
+    font-size: 16pt;
     background : rgb(170, 124, 65);
     width: 30vw;
     flex-flow: column;
     position: absolute;
-    top : 150px;
+    top : 350px;
     left: 55vw;
+}
+
+.image {
+    width: 30vw
+}
+
+.aspython {
+    font-size: 16pt;
+    background : rgb(170, 124, 65);
+    width: 40vw;
+    position: absolute;
+    left : 20vh;
+    top : 350px;
+}
+
+
+@media only screen and (max-width: 768px)  {
+    .description {
+        top: inherit;
+        left: 0;
+        width: 100vw;
+        position: relative;
+    }
+    .preview {
+        top: inherit;
+        left: 0;
+        width : 100vw;
+        position:relative;
+        
+    }
+    
 }
