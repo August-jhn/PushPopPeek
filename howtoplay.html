@@ -21,7 +21,52 @@
         <a href = "download.html"style = 'padding-left:10vw'>Download</a>
     </div>
 
-    How to play: DO TOMORROW
+    <div class = 'big'>
+        <h2>
+            Game Instructions
+        </h2>
+        <p>
+            The gameplay is simple. There are two players: white and black. There is also one neutral color: red.
+            The board consists of a 4x4 grid of stacks. Pieces can be placed (pushed) and removed (popped) from any stack. 
+
+            For each turn, there are three possible moves:
+            <ul>
+                <li>
+                    Place one of your color and one red.
+                </li>
+                <li>
+                    Place two red.
+                </li>
+                <li>
+                    Remove two pieces, revealing whatever piece lies below it.
+                </li>
+            </ul>
+            The game ends when either white or red has four of their color in a row, diagonal, or column. 
+        </p>
+    </div>
+
+    <div class = 'big'>
+        <h2>
+            Strategy
+        </h2>
+        Our game is designed so that thinking about the stack data structure is a significant part of the gameplay and strategy.
+        The three fundamental operations on a stack are part of the gameplay. To guide us through the main philosophy motivating the game rules, we have two concepts: offense and defence.    
+        Offense corresponds to advancing the player towards a win. Defense corresponds to preventing the opponents advancement.
+        <ul>
+            <li>
+                <b>Push: </b> Pushing corresponds to placing a piece. Pushing/placing can have two strategic roles: offense or defence. The offensive side 
+                of pushing is advancing the game towards the player winnig by making progress towards having four of their color in a row. The defensive side involves 
+                covering up the pieces of your opponent. Often these two roles are mixed into one when a piece of the player's color is placed over the opponent's piece
+            </li>
+            <li>
+                <b>Pop: </b> Popping or removing has two main strategic roles: offense or defence. The offensive side involves removing a piece to uncover the piece which lies under it, which the player remembers to be their own. On the other hand, the defensive role of popping lies in the removal of the opponents pieces, so as to prevent their advancement. A warning is in order, however. Removal always entails a risk of accidentally causing the opponent to win. 
+            </li>
+            <li>
+                <b>Peek: </b> Peeking does not correspond to a single game move, but more to a combination of the removal and placement of pieces. In a stack data structure, only the top entries are readily accessible. We wanted this to be reflected in the gameplay. As such, the players must remember which pieces lie under the top pieces. 
+            </li>
+        </ul>
+        While this is what we envision the general strategy of our game to be, it is very possible that there are unknown features of our rules. Please let us know if you have any observations!
+    </div>
 
 </body>
 </html>
